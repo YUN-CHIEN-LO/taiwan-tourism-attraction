@@ -10,14 +10,12 @@ const props = defineProps({
   modelValue: Boolean,
 });
 // 定義元件事件
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue", "submit"]);
 
 // 篩選表單內容
 const queryForm = reactive({
-  // 城市
-  city: "",
-  // 關鍵字
-  keyword: "",
+  city: "", // 城市
+  keyword: "", // 關鍵字
 });
 
 /**
@@ -36,11 +34,17 @@ function handleToggleSearch() {
   updateValue(!props.modelValue);
 }
 
+/**
+ * 送出篩選條件
+ */
 function handleSearch() {
-  store.listAttractions({
+  store.$patch({
+    page: 0,
+    perPage: 25,
     city: queryForm.city,
     keyword: queryForm.keyword,
   });
+  emit("submit");
 }
 </script>
 

@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import api from "@/api";
+import { useRouter } from "vue-router";
 import { reactive, onMounted, ref } from "vue";
 import FrontSearchPanel from "@/components/FrontSearchPanel.vue";
+
+// 使用路由
+const router = useRouter();
 
 // 圖片清單
 const backgroundImages = reactive({ list: [] });
@@ -23,6 +27,16 @@ function handleScroll(event: Event) {
   isShowSearch.value = target?.scrollTop > currentScrollOffset.value;
   // 更新當前捲動位置
   currentScrollOffset.value = target?.scrollTop ?? 0;
+}
+
+/**
+ * 送出篩選條件
+ */
+function handleSubmit() {
+  router.push({
+    name: "frontResult",
+    query: { tab: "attraction" },
+  });
 }
 
 onMounted(() => {
@@ -67,7 +81,7 @@ onMounted(() => {
           </h1>
         </div>
       </div>
-      <FrontSearchPanel v-model="isShowSearch" />
+      <FrontSearchPanel v-model="isShowSearch" @submit="handleSubmit" />
     </el-main>
     <div class="scroll-div"></div>
   </el-container>

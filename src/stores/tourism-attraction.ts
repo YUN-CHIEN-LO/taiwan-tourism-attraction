@@ -31,12 +31,11 @@ export const useAttractionStore = defineStore("attraction", {
      * @param {Object} query - 篩選條件
      * @returns {Promise}
      */
-    listAttractions(query: Query) {
-      return api.attraction
-        .listScenicSpot(Object.assign(this.attractionQuery, query))
-        .then((res) => {
-          console.log(res);
-        });
+    async listAttractions(query: Query | null) {
+      const res = await api.attraction.listScenicSpot(
+        Object.assign(this.attractionQuery, query ?? getDefaultQuery())
+      );
+      return res;
     },
   },
 });
