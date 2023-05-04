@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import { cityOptions } from "@/constants";
+import { useAttractionStore } from "@/stores";
+
+const store = useAttractionStore();
 
 // 定義元件屬性
 const props = defineProps({
@@ -32,6 +35,13 @@ function updateValue(value: boolean) {
 function handleToggleSearch() {
   updateValue(!props.modelValue);
 }
+
+function handleSearch() {
+  store.listAttractions({
+    city: queryForm.city,
+    keyword: queryForm.keyword,
+  });
+}
 </script>
 
 <template>
@@ -56,7 +66,7 @@ function handleToggleSearch() {
       <el-form-item prop="keyword">
         <el-input v-model="queryForm.keyword" placeholder="Or insert keyword" clearable> </el-input>
       </el-form-item>
-      <el-button style="width: 100%">SEARCH</el-button>
+      <el-button style="width: 100%" @click="handleSearch">SEARCH</el-button>
     </el-form>
   </div>
 </template>

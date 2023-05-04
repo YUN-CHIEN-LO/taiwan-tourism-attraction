@@ -3,7 +3,7 @@ import tourismAttraction from '@/api/modules/tourism-attraction';
 
 export default {
   // 首頁背景圖片相關
-  ...backgroundImage,
+  background: backgroundImage,
   // 相關旅遊景點
-  ...tourismAttraction
+  attraction: tourismAttraction
 };

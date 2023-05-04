@@ -27,7 +27,7 @@ function handleScroll(event: Event) {
 
 onMounted(() => {
   // 取得背景圖片清單
-  api.listImage().then((image) => {
+  api.background.listImage().then((image) => {
     const { photos } = image ?? [];
     backgroundImages.list = photos ?? [];
     isLoading.value = false;
