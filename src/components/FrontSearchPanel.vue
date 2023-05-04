@@ -1,20 +1,21 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import { cityOptions } from "@/constants";
+import { useAttractionStore } from "@/stores";
+
+const store = useAttractionStore();
 
 // 定義元件屬性
 const props = defineProps({
   modelValue: Boolean,
 });
 // 定義元件事件
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue", "submit"]);
 
 // 篩選表單內容
 const queryForm = reactive({
-  // 城市
-  city: "",
-  // 關鍵字
-  keyword: "",
+  city: "", // 城市
+  keyword: "", // 關鍵字
 });
 
 /**
@@ -31,6 +32,19 @@ function updateValue(value: boolean) {
  */
 function handleToggleSearch() {
   updateValue(!props.modelValue);
+}
+
+/**
+ * 送出篩選條件
+ */
+function handleSearch() {
+  store.$patch({
+    page: 0,
+    perPage: 25,
+    city: queryForm.city,
+    keyword: queryForm.keyword,
+  });
+  emit("submit");
 }
 </script>
 
@@ -56,7 +70,7 @@ function handleToggleSearch() {
       <el-form-item prop="keyword">
         <el-input v-model="queryForm.keyword" placeholder="Or insert keyword" clearable> </el-input>
       </el-form-item>
-      <el-button style="width: 100%">SEARCH</el-button>
+      <el-button style="width: 100%" @click="handleSearch">SEARCH</el-button>
     </el-form>
   </div>
 </template>

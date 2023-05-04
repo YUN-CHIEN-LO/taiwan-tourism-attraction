@@ -11,8 +11,13 @@ let routes = [
     children: [
       {
         path: "home",
-        name: "frontDashboard",
-        component: () => import("@/views/FrontHome.vue"),
+        name: "frontHome",
+        component: () => import("@/views/FrontIndex.vue"),
+      },
+      {
+        path: "result",
+        name: "frontResult",
+        component: () => import("@/views/FrontResult.vue"),
       },
     ],
   },

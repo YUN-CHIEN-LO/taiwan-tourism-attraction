@@ -9,6 +9,13 @@ export default defineConfig({
       reactivityTransform: true,
     }),
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "@/assets/var.scss";`
+      }
+    }
+  },
   resolve: {
     alias: [{ find: "@", replacement: fileURLToPath(new URL("./src", import.meta.url)) }],
   },

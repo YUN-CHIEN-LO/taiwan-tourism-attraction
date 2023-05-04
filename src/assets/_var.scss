@@ -1,0 +1,5 @@
+@use "element-plus/theme-chalk/src/index.scss" as *;
+
+$color-base: #333333;
+$frame-offset: 60px;
+$frame-height: calc(100vh - $frame-offset);
