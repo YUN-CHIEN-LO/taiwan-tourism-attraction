@@ -3,63 +3,93 @@ import api from "@/api";
 import { useAttractionStore } from "@/stores";
 import { reactive, onMounted } from "vue";
 const store = useAttractionStore();
-const result = reactive({ list: [] });
+import { RawAttract, Attract } from "@/constant";
+const result = reactive({ list: [] as Array<Attract> });
+
+function formatAttract(rawData: RawAttract): Attract {
+  const { ScenicSpotID, Picture, ScenicSpotName, Description, City } = rawData;
+
+  return {
+    id: ScenicSpotID,
+    url: Picture.PictureUrl1,
+    alt: Picture.PictureDescription1,
+    name: ScenicSpotName,
+    description: Description,
+    tags: [City].concat(
+      Object.keys(rawData)
+        .filter((key) => key.includes("Class"))
+        .map((key) => rawData[key])
+    ),
+  };
+}
+
+function formatAttractList(rawList: Array<RawAttract>): Array<Attract> {
+  return rawList.map((item: RawAttract): Attract => formatAttract(item));
+}
 
 function getList() {
   store.listAttractions().then((res) => {
     const { data } = res;
     console.log(data);
-    result.list = data;
+    result.list = formatAttractList(data);
   });
 }
+
+function handlePrev() {}
+
 onMounted(() => {
-  // getList();
+  getList();
+  // result.list = formatAttractList([]);
 });
 </script>
 
 <template>
   <el-container class="result__panel">
     <el-main>
-      <el-row>
+      <el-row :gutter="16">
         <el-col
           v-for="item in result.list"
-          :key="item.ScenicSpotID"
-          :span="8"
-          :offset="index > 0 ? 2 : 0"
+          :key="item.id"
+          :xs="24"
+          :sm="12"
+          :md="8"
+          style="margin-bottom: 16px"
         >
-          <el-card :body-style="{ padding: '0px' }">
-            <img
-              src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-              class="image"
+          <el-card :body-style="{ padding: '8px' }">
+            <el-image
+              style="width: 100%; height: 200px"
+              :src="item.url"
+              :alt="item.alt"
+              fit="cover"
             />
-            <div style="padding: 14px">
-              <span>Yummy hamburger</span>
-              <div class="bottom">
-                <time class="time">{{}}</time>
-                <el-button text class="button">Operating</el-button>
-              </div>
+            <div>
+              <span>{{ item.name }}</span>
+            </div>
+            <div>
+              {{ item.tags }}
             </div>
           </el-card>
         </el-col>
       </el-row>
     </el-main>
+
+    <h1>
+      <el-button :disabled="store.page <= 0" @click="handlePage(-1)">prev</el-button>
+      {{ store.page }}
+      <el-button :disabled="store.page <= 0" @click="handlePage(+1)">next</el-button>
+    </h1>
   </el-container>
 </template>
 
 <style lang="scss" scoped>
 .result {
   &__panel {
+    width: 100%;
+    max-width: 1000px;
     flex-direction: column;
-    height: 100vh;
+    height: calc(100vh - 60px);
     overflow-y: auto;
-    & .el-main {
-      position: sticky;
-      top: 0;
-      overflow: hidden;
-      height: 100%;
-      padding: 0px;
-      flex-shrink: 0;
-    }
+    margin: 0px auto;
   }
 }
 </style>
